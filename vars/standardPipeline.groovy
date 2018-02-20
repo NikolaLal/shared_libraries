@@ -25,7 +25,6 @@ def call(body) {
 	        stage ('Tests') {
 		        parallel 'static': {
 		            sh "echo 'shell scripts to run static tests...'"
-				step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
 		        },
 		        'unit': {
 		            sh "echo 'shell scripts to run unit tests...'"
