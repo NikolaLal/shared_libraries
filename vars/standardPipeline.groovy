@@ -25,8 +25,6 @@ def call(body) {
 	        stage ('Tests') {
 		        parallel 'static': {
 		            sh "echo 'shell scripts to run static tests...'"
-				junit '**/target/surefire-reports/TEST-*.xml'
-      				archive 'target/*.jar'
 		        },
 		        'unit': {
 		            sh "echo 'shell scripts to run unit tests...'"
