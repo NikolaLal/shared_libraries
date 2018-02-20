@@ -5,15 +5,22 @@ def call(body) {
     body()
 
     node {
+	      def mvnHome
 	    // Clean workspace before doing anything
 	    deleteDir()
 
 	    try {
 	        stage ('Clone') {
 	        	checkout scm
+			mvnHome = tool 'M3'
 	        }
 	        stage ('Build') {
-	        	sh "echo 'building ${config.projectName} ...'"
+	              // Run the maven build
+     			 if (isUnix()) {
+         			sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+      					} else {
+         			bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
+      				}
 	        }
 	        stage ('Tests') {
 		        parallel 'static': {
