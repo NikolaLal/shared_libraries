@@ -23,7 +23,7 @@ def call(body) {
         		 rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
         		 rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
 			 buildInfo = Artifactory.newBuildInfo()
-			 builInfo.env.capture = true
+			 buildInfo.env.capture = true
 	        }
 			
 	        stage ('Build') {
