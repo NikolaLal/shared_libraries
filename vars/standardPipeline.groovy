@@ -5,7 +5,7 @@ def call(body) {
     body()
 
     node {
-	    def server = Artifactory.Server 'LinuxartsVM'
+	    def server = Artifactory.Server ('LinuxartsVM')
     	    def rtMaven = Artifactory.newMavenBuild()
             def buildInfo
 	    def mvnHome
