@@ -26,14 +26,9 @@ def call(body) {
 			 buildInfo.env.capture = true
 	        }
 		    
-	        stage ('Build') {
-	              // Run the maven build
-     			 if (isUnix()) {
-         			sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
-      					} else {
-         			bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
-      				}
-	        }
+stage ('Exec Maven') {
+        rtMaven.run pom: 'maven-example/pom.xml', goals: 'clean install', buildInfo: buildInfo
+    }
 	        stage ('Tests') {
 		        parallel 'static': {
 		            sh "echo 'shell scripts to run static tests...'"
