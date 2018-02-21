@@ -27,7 +27,7 @@ def call(body) {
 	        }
 		    
 stage ('Exec Maven') {
-        rtMaven.run pom: 'sample_java/pom.xml', goals: 'clean install', buildInfo: buildInfo
+        rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
     }
 	        stage ('Tests') {
 		        parallel 'static': {
