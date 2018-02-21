@@ -26,19 +26,14 @@ def call(body) {
 			 buildInfo.env.capture = true
 	        }
 		    
-stage ('Exec Maven') {
-        rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
-    }
+		stage ('Build') {
+        		rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
+    		        }
+		    
 	        stage ('Tests') {
-		        parallel 'static': {
+
 		            sh "echo 'shell scripts to run static tests...'"
-		        },
-		        'unit': {
-		            sh "echo 'shell scripts to run unit tests...'"
-		        },
-		        'integration': {
-		            sh "echo 'shell scripts to run integration tests...'"
-		        }
+
 	        }
 		    
 		stage ('Publish build info') {
