@@ -4,7 +4,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    node ('LinuxAgent') {
+    node {
 	    def server = Artifactory.server ('LinuxartsVM')
     	    def rtMaven = Artifactory.newMavenBuild()
             def buildInfo
