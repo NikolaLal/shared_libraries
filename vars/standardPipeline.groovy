@@ -5,7 +5,7 @@ def call(body) {
     body()
 
     node {
-	    def server = Artifactory.newServer url: SERVER_URL, credentialsId: CREDENTIALS
+	    def server = Artifactory.Server 'LinuxartsVM'
     	    def rtMaven = Artifactory.newMavenBuild()
             def buildInfo
 	    def mvnHome
@@ -19,10 +19,11 @@ def call(body) {
 		}
 		    
 		stage ('Artifactory configuration') {
-       			 rtMaven.tool = MAVEN_TOOL // Tool name from Jenkins configuration
+       			 rtMaven.tool = M3 // Tool name from Jenkins configuration
         		 rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
         		 rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
 			 buildInfo = Artifactory.newBuildInfo()
+			 builInfo.env.capture = true
 	        }
 			
 	        stage ('Build') {
