@@ -5,7 +5,10 @@ def call(body) {
     body()
 
     node {
-	      def mvnHome
+	    def server = Artifactory.newServer url: SERVER_URL, credentialsId: CREDENTIALS
+    	    def rtMaven = Artifactory.newMavenBuild()
+            def buildInfo
+	    def mvnHome
 	    // Clean workspace before doing anything
 	    deleteDir()
 
@@ -13,7 +16,15 @@ def call(body) {
 	        stage ('Clone') {
 	        	checkout scm
 			mvnHome = tool 'M3'
+		}
+		    
+		stage ('Artifactory configuration') {
+       			 rtMaven.tool = MAVEN_TOOL // Tool name from Jenkins configuration
+        		 rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
+        		 rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
+			 buildInfo = Artifactory.newBuildInfo()
 	        }
+			
 	        stage ('Build') {
 	              // Run the maven build
      			 if (isUnix()) {
@@ -22,6 +33,7 @@ def call(body) {
          			bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
       				}
 	        }
+		    
 	        stage ('Tests') {
 		        parallel 'static': {
 		            sh "echo 'shell scripts to run static tests...'"
@@ -33,6 +45,11 @@ def call(body) {
 		            sh "echo 'shell scripts to run integration tests...'"
 		        }
 	        }
+		    
+		stage ('Publish build info') {
+        	    server.publishBuildInfo buildInfo
+		}
+		    
 	      	stage ('Deploy') {
 	            sh "echo 'deploying to server ${config.serverDomain}...'"
 	      	}
