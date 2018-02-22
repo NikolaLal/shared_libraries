@@ -32,6 +32,7 @@ def call(body) {
 		    
 	        stage ('Tests') {
 
+			    junit '**/target/surefire-reports/TEST-*.xml'
 		            sh "echo 'shell scripts to run static tests...'"
 
 	        }
